@@ -4,7 +4,7 @@ FROM $BUILD_FROM
 # Add env
 ENV LANG C.UTF-8
 
-ENV ZIGBEE2MQTT_VERSION=1.14.3
+ENV ZIGBEE2MQTT_VERSION=1.16.2
 ENV ARCHIVE=zigbee2mqtt-$ZIGBEE2MQTT_VERSION
 
 RUN apk add --update --no-cache curl jq nodejs npm socat \
@@ -13,6 +13,7 @@ RUN apk add --update --no-cache curl jq nodejs npm socat \
   "https://github.com/Koenkk/zigbee2mqtt/archive/$ZIGBEE2MQTT_VERSION.tar.gz" && \
   tar xzvf "/$ARCHIVE.tar.gz" && \
   cd "/$ARCHIVE" && \
+  jq -n --arg commit $ZIGBEE2MQTT_VERSION '{"hash": $commit }' > .hash.json && \
   npm install --unsafe-perm -g pm2 && \
   npm install --unsafe-perm && \
   apk del make gcc g++ python2 linux-headers udev && \
