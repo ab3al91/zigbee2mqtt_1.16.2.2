@@ -1,18 +1,21 @@
 {
-  "name": "zigbee2mqtt",
-  "version": "1.14.3",
+  "name": "Zigbee2mqtt",
+  "version": "1.16.2.2",
   "slug": "zigbee2mqtt",
   "description": "Zigbee to MQTT Bridge",
   "auto_uart": true,
   "url": "https://github.com/danielwelch/hassio-zigbee2mqtt",
-  "startup": "before",
+  "startup": "application",
   "arch": [
     "aarch64",
     "amd64",
     "armhf",
+    "armv7",
     "i386"
   ],
   "boot": "auto",
+  "ingress": true,
+  "panel_icon": "mdi:zigbee",
   "map": [
     "share:rw",
     "config:rw"
@@ -25,6 +28,7 @@
   },
   "options": {
     "data_path": "/share/zigbee2mqtt",
+    "external_converters": [],
     "devices": "devices.yaml",
     "groups": "groups.yaml",
     "homeassistant": true,
@@ -39,31 +43,23 @@
       "port": "/dev/ttyACM0"
     },
     "advanced": {
+      "log_level": "info",
       "pan_id": 6754,
       "channel": 11,
-      "network_key": [
-        1,
-        3,
-        5,
-        7,
-        9,
-        11,
-        13,
-        15,
-        0,
-        2,
-        4,
-        6,
-        8,
-        10,
-        12,
-        13
-      ],
-      "availability_blacklist": []
+      "network_key": [1, 3, 5, 7, 9, 11, 13, 15, 0, 2, 4, 6, 8, 10, 12, 13],
+      "availability_blocklist": [],
+      "availability_passlist": []
     },
-    "ban": [],
-    "whitelist": [],
+    "device_options": {},
+    "blocklist": [],
+    "passlist": [],
     "queue": {},
+    "frontend": {
+      "port": 8099
+    },
+    "experimental": {
+      "new_api": true
+    },
     "socat": {
       "enabled": false,
       "master": "pty,raw,echo=0,link=/dev/ttyZ2M,mode=777",
@@ -78,6 +74,9 @@
     "zigbee_shepherd_devices": "bool?",
     "zigbee_shepherd_debug": "bool?",
     "zigbee_herdsman_debug": "bool?",
+    "external_converters": [
+      "str?"
+    ],
     "data_path": "str",
     "devices": "str?",
     "groups": "str?",
@@ -92,18 +91,21 @@
       "user": "str?",
       "password": "str?",
       "client_id": "str?",
+      "keepalive": "int?",
+      "version": "int?",
       "reject_unauthorized": "bool?",
-      "include_device_information": "bool?"
+      "include_device_information": "bool?",
+      "force_disable_retain": "bool?"
     },
     "serial": {
       "port": "str",
       "disable_led": "bool?",
       "adapter": "match(^zstack|deconz$)?"
     },
-    "ban": [
+    "blocklist": [
       "str?"
     ],
-    "whitelist": [
+    "passlist": [
       "str?"
     ],
     "advanced": {
@@ -111,11 +113,17 @@
       "ext_pan_id_string": "match(^(\\s*\\d+\\s*,){7}(\\s*\\d+\\s*)$)?",
       "channel": "int(11,26)?",
       "cache_state": "bool?",
+      "cache_state_persistent": "bool?",
+      "cache_state_send_on_startup": "bool?",
       "log_level": "match(^info|debug|warn|error$)?",
       "log_directory": "str?",
+      "log_file": "str?",
+      "log_rotation": "bool?",
+      "timestamp_format": "str?",
       "baudrate": "int?",
       "rtscts": "bool?",
       "soft_reset_timeout": "int?",
+      "adapter_concurrent": "int?",
       "network_key": [
         "int?"
       ],
@@ -123,16 +131,35 @@
       "last_seen": "match(^disable|ISO_8601|epoch)?",
       "elapsed": "bool?",
       "availability_timeout": "int?",
-      "availability_blacklist": [
+      "availability_blocklist": [
+        "str?"
+      ],
+      "availability_passlist": [
         "str?"
       ],
       "report": "bool?",
       "homeassistant_discovery_topic": "str?",
-      "homeassistant_status_topic": "str?"
+      "homeassistant_status_topic": "str?",
+      "homeassistant_legacy_triggers": "bool?"
     },
+    "device_options": {
+      "occupancy_timeout": "int?",
+      "temperature_precision": "int?",
+      "legacy": "bool?"
+    },
+    "device_options_string": "str?",
     "queue": {
       "delay": "int?",
       "simultaneously": "int?"
+    },
+    "experimental": {
+      "transmit_power": "int?",
+      "output": "str?",
+      "new_api": "bool?"
+    },
+    "frontend": {
+      "host": "str?",
+      "port": "int?"
     },
     "socat": {
       "enabled": "bool?",
